@@ -26,6 +26,7 @@ BASE_URL = 'https://idp2-apigw.cloud.grohe.com/v3/iot/'
 
 GROHE_SENSE_TYPE = 101 # Type identifier for the battery powered water detector
 GROHE_SENSE_GUARD_TYPE = 103 # Type identifier for sense guard, the water guard installed on your water pipe
+GROHE_BLUE_HOME_TYPE = 104 # Type identifier for Grohe Blue Home, chiled water tap
 
 GroheDevice = collections.namedtuple('GroheDevice', ['locationId', 'roomId', 'applianceId', 'type', 'name'])
 
