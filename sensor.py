@@ -9,7 +9,7 @@ from homeassistant.const import (STATE_UNAVAILABLE, STATE_UNKNOWN, TEMP_CELSIUS,
 
 from homeassistant.helpers import aiohttp_client
 
-from . import (DOMAIN, BASE_URL, GROHE_SENSE_TYPE, GROHE_SENSE_GUARD_TYPE)
+from . import (DOMAIN, BASE_URL, GROHE_SENSE_TYPE, GROHE_SENSE_GUARD_TYPE, GROHE_BLUE_HOME_TYPE)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -27,32 +27,70 @@ SENSOR_TYPES = {
 
 SENSOR_TYPES_PER_UNIT = {
         GROHE_SENSE_TYPE: [ 'temperature', 'humidity'],
-        GROHE_SENSE_GUARD_TYPE: [ 'flowrate', 'pressure', 'temperature_guard']
+        GROHE_SENSE_GUARD_TYPE: [ 'flowrate', 'pressure', 'temperature_guard'],
+        GROHE_BLUE_HOME_TYPE: [ 'open_close_cycles_still', 'open_close_cycles_carbonated', 'water_running_time_still', 'water_running_time_medium', 'water_running_time_carbonated', 'operating_time', 'max_idle_time', 'pump_count', 'pump_running_time', 'remaining_filter', 'remaining_co2', 'date_of_filter_replacement', 'date_of_co2_replacement', 'date_of_cleaning', 'power_cut_count', 'time_since_restart', 'time_since_last_withdrawal', 'filter_change_count', 'cleaning_count' ]
         }
 
 NOTIFICATION_UPDATE_DELAY = timedelta(minutes=1)
 
 NOTIFICATION_TYPES = { # The protocol returns notification information as a (category, type) tuple, this maps to strings
-        (10,60) : 'Firmware update available',
-        (10,460) : 'Firmware update available',
+        (10,10) : 'Integration successful',
+        (10,60) : 'Firmware update sense',
+        (10,410) : 'Integration successful guard',
+        (10,460) : 'Firmware update guard',
+        (10,555) : 'Blue auto flush active',
+        (10,556) : 'Blue auto flush inactive',
+        (10,560) : 'Firmware update blue',
+        (10,560) : 'Firmware update blue professional',
+        (10,601) : 'Nest awaymode automaticcontrol off',
+        (10,602) : 'Nest homemode automaticcontrol off',
+        (10,557) : 'Empty cartridge',
+        (10,566) : 'Order partially shipped',
+        (10,561) : 'Order fully shipped',
+        (10,563) : 'Order fully delivered',
+        (10,559) : 'Cleaning completed',
         (20,11) : 'Battery low',
         (20,12) : 'Battery empty',
-        (20,20) : 'Below temperature threshold',
-        (20,21) : 'Above temperature threshold',
-        (20,30) : 'Below humidity threshold',
-        (20,31) : 'Above humidity threshold',
-        (20,40) : 'Frost warning',
-        (20,80) : 'Lost wifi',
-        (20,320) : 'Unusual water consumption (water shut off)',
-        (20,321) : 'Unusual water consumption (water not shut off)',
+        (20,20) : 'Undercut temperature threshold',
+        (20,21) : 'Exceed temperature threshold',
+        (20,30) : 'Undercut humidity threshold',
+        (20,31) : 'Exceed humidity threshold',
+        (20,40) : 'Frost sense',
+        (20,80) : 'Device lost wifi to cloud sense',
+        (20,320) : 'Unusual water consumption',
+        (20,321) : 'Unusual water consumption no shut off',
         (20,330) : 'Micro leakage',
-        (20,340) : 'Frost warning',
-        (20,380) : 'Lost wifi',
+        (20,332) : 'Micro leakage test impossible',
+        (20,340) : 'Frost guard',
+        (20,380) : 'Device lost wifi to cloud guard',
+        (20,420) : 'Blind spot',
+        (20,421) : 'Blind spot no shut off',
+        (20,550) : 'Blue filter low',
+        (20,551) : 'Blue co2 low',
+        (20,580) : 'Blue no connection',
+        (20,603) : 'Nest noresponse guard open',
+        (20,604) : 'Nest noresponse guard close',
+        (20,552) : 'Empty filter blue',
+        (20,553) : 'Empty co2 blue',
+        (20,564) : 'Filter emptystock',
+        (20,565) : 'Co2 emptystock',
+        (20,558) : 'Cleaning',
         (30,0) : 'Flooding',
         (30,310) : 'Pipe break',
-        (30,400) : 'Maximum volume reached',
-        (30,430) : 'Sense detected water (water shut off)',
-        (30,431) : 'Sense detected water (water not shut off)',
+        (30,400) : 'Max volume',
+        (30,430) : 'Triggered by sense',
+        (30,431) : 'Triggered by sense no shut off',
+        (30,50) : 'Sensor moved',
+        (30,90) : 'system error 90',
+        (30,390) : 'System error 390',
+        (30,101) : 'System rtc error',
+        (30,102) : 'System acceleration sensor',
+        (30,103) : 'System out of service',
+        (30,104) : 'System memory error',
+        (30,105) : 'System relative temperature',
+        (30,106) : 'System water detection error',
+        (30,107) : 'System button error',
+        (30,100) : 'System error',
         }
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
